@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Talk2GPT</title>
+  <script src="./index.js"></script>
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <section>
+    <sup><sub>
+      Your OpenAI secret is stored once per browser session.
+    </sub></sup>
+  </section>
+  <section id="talk">
+    <button value="ask" disabled>🎙️</button>
+  </section>
+  <section id="chat">
+    <div>Hello there 👋 Ask me anything through the mic</div>
+  </section>
+  <section id="config">
+    <form onsubmit="event.preventDefault()">
+      <label>
+        <span>volume</span>
+        <input type="range" name="volume" value="1" min="0.0" max="1.0" step="0.1">
+        <span>64</span>
+      </label>
+      <label>
+        <span>max_tokens</span>
+        <input type="number" name="max_tokens" value="140" min="0" max="4096" step="1" placeholder="0">
+        <span>64</span>
+      </label>
+      <label>
+        <span>temperature</span>
+        <input type="range" name="temperature" value="0.5" min="0.0" max="1.0" step="0.1">
+        <span>0.5</span>
+      </label>
+      <a href="https://beta.openai.com/docs/api-reference/completions">OpenAI Completions Options</a>
+    </form>
+  </section>
+</body>
+</html>
