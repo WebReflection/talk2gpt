@@ -1,4 +1,4 @@
-/*! (c) Andrea Giammarchi */
+/*! (c) Andrea Giammarchi - ISC */
 
 const {assign} = Object;
 const interimResults = {interimResults: true};

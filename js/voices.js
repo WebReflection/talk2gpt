@@ -1,4 +1,4 @@
-/*! (c) Andrea Giammarchi */
+/*! (c) Andrea Giammarchi - ISC */
 
 export default (timeout = 3000) => new Promise($ => {
   // must be assigned before trying to access voices
