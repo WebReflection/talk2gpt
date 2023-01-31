@@ -1,0 +1,58 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body, section, #mic {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100vw;
+  width: 100svw;
+  height: 100vh;
+  height: 100svh;
+}
+
+body::after {
+  width: 100vw;
+  width: 100svw;
+  display: block;
+  position: fixed;
+  bottom: 0;
+  font-size: xx-small;
+  text-align: center;
+  content: 'You need a browser compatible with Web Speech API'
+}
+
+body > section:first-of-type {
+  height: 20svh;
+}
+
+body > section:last-of-type {
+  height: 80svh;
+  overflow: auto;
+  scrollbar-gutter: stable both-edges;
+}
+
+#mic {
+  width: 100%;
+  height: 100%;
+  line-height: 100%;
+  font-size: xx-large;
+  border: 0;
+  transition: all ease-in 250ms;
+}
+
+#mic:disabled {
+  opacity: .5;
+}
+
+#content {
+  padding: 1rem;
+}
+
+center {
+  font-size: small;
+}
