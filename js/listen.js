@@ -11,7 +11,7 @@ if (!SpeechRecognition)
 export default (options = void 0) => new Promise((resolve, reject) => {
   let t = 0, ended = false;
   const stop = event => {
-    if (event) reject(event);
+    if (event && event.error !== 'no-speech') reject(event);
     clearTimeout(t);
     ended = true;
     sr.stop();

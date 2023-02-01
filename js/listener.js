@@ -24,7 +24,7 @@ $('#mic').on('click', ({currentTarget}) => {
   listen().then(
     transcript => {
       clearInterval(i);
-      log('You said: ' + transcript);
+      log('You said: ' + (transcript || 'nothing'));
       currentTarget.disabled = false;
     },
     console.error
