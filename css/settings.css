@@ -1,0 +1,80 @@
+body::after {
+  content: attr(data-usage);
+}
+
+#settings {
+  display: none;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  width: 100svw;
+  height: 100vh;
+  height: 100svh;
+  padding: 1rem;
+  transform: translateX(100vw);
+  transform: translateX(100svw);
+}
+
+#settings, #settings > button {
+  transition: all ease-in 250ms;
+}
+
+body.settings #settings {
+  transform: translateX(0);
+}
+
+body > *:not(#settings) {
+  opacity: 1;
+  transition: opacity ease-in 125ms;
+}
+
+body.settings > *:not(#settings) {
+  opacity: 0;
+}
+
+#settings fieldset {
+  display: flex;
+  flex-direction: column;
+}
+
+#settings fieldset > legend {
+  font-weight: bold;
+  font-size: small;
+  padding: 8px;
+}
+
+#settings label {
+  margin: .5rem;
+  width: 100%;
+}
+
+#settings label > span:first-child {
+  display: inline-block;
+  width: 40%;
+}
+#settings label > span:first-child + * {
+  width: 40%;
+}
+#settings label > span:last-child {
+  display: inline-block;
+  width: calc(20% - 1rem - 8px);
+  text-align: right;
+}
+
+#settings > button {
+  margin: 0;
+  padding: 4px;
+  font-size: 1rem;
+  line-height: 1rem;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  transform: translateX(-100vw);
+  transform: translateX(-100svw);
+}
+
+body.settings #settings > button {
+  transform: translateX(0);
+}

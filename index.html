@@ -3,43 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
+  <meta name=author content="Andrea Giammarchi, @webreflection">
+  <meta name=description content="Web Speech API and Chat GPT">
+  <meta name=apple-mobile-web-app-capable content=yes>
+  <meta name=mobile-web-app-capable content=yes>
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="img/android-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
   <title>Talk2GPT</title>
-  <script src="./index.js"></script>
-  <link rel="stylesheet" href="./index.css">
+  <link rel="apple-touch-icon" sizes="57x57" href="img/android-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="img/android-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="img/android-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="img/android-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="img/android-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="img/android-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="img/android-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="img/android-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/android-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="img/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/android-icon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="img/android-icon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/android-icon-16x16.png">
+  <link rel="manifest" href="manifest.json">
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+  <script type="module" src="./js/index.js"></script>
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/settings.css">
 </head>
 <body>
-  <section>
-    <sup><sub>
-      Your OpenAI secret is stored once per browser session.
-    </sub></sup>
-  </section>
-  <section id="talk">
-    <button value="ask" disabled>🎙️</button>
-  </section>
-  <section id="chat">
-    <div>Hello there 👋 Ask me anything through the mic</div>
-  </section>
-  <section id="config">
-    <form onsubmit="event.preventDefault()">
-      <label>
-        <span>volume</span>
-        <input type="range" name="volume" value="1" min="0.0" max="1.0" step="0.1">
-        <span>64</span>
-      </label>
-      <label>
-        <span>max_tokens</span>
-        <input type="number" name="max_tokens" value="140" min="0" max="4096" step="1" placeholder="0">
-        <span>64</span>
-      </label>
-      <label>
-        <span>temperature</span>
-        <input type="range" name="temperature" value="0.5" min="0.0" max="1.0" step="0.1">
-        <span>0.5</span>
-      </label>
-      <a href="https://beta.openai.com/docs/api-reference/completions">OpenAI Completions Options</a>
+  <section><button id="mic" title="click to talk" disabled>🎙️</button></section>
+  <section class="content"><div id="content"></div></section>
+  <section id="settings">
+    <form>
+      <fieldset>
+        <legend>Generic Settings</legend>
+        <label>
+          <span>Preferred voice</span>
+          <select name="voice"></select>
+        </label>
+        <label>
+          <span>Voice volume</span>
+          <input type="range" name="volume" value="1" min="0.0" max="1.0" step="0.1">
+          <span>1</span>
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Completition Settings</legend>
+        <label>
+          <span>Model</span>
+          <select name="model"></select>
+        </label>
+        <label>
+          <span>Max tokens</span>
+          <input type="number" name="max_tokens" value="140" min="1" max="4096" step="1" placeholder="1">
+          <span>140</span>
+        </label>
+        <label>
+          <span>temperature</span>
+          <input type="range" name="temperature" value="0.5" min="0.0" max="1.0" step="0.1">
+          <span>0.5</span>
+        </label>
+      </fieldset>
     </form>
+    <button title="change settings">⚙</button>
   </section>
 </body>
 </html>

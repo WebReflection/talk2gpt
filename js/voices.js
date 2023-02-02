@@ -1,5 +1,7 @@
 /*! (c) Andrea Giammarchi - ISC */
 
+let {Promise, setTimeout, speechSynthesis} = globalThis;
+
 export default (timeout = 3000) => new Promise($ => {
   // must be assigned before trying to access voices
   speechSynthesis.addEventListener(

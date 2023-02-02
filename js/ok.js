@@ -31,6 +31,7 @@ $('#mic').on('click', ({currentTarget}) => {
         say('I am ready');
         log('I am ready 🤖');
       default:
+        console.log(transcript);
         listen().then(check);
         break;
     }

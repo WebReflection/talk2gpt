@@ -1,20 +1,25 @@
 /*! (c) Andrea Giammarchi - ISC */
 
+let {Object, Promise, SpeechRecognition, clearTimeout, setTimeout} = globalThis;
+if (!SpeechRecognition)
+  SpeechRecognition = webkitSpeechRecognition;
+
 const {assign} = Object;
 const interimResults = {interimResults: true};
 const once = {once: true};
 
-let {SpeechRecognition} = globalThis;
-if (!SpeechRecognition)
-  SpeechRecognition = webkitSpeechRecognition;
-
 export default (options = void 0) => new Promise((resolve, reject) => {
   let t = 0, ended = false;
   const stop = event => {
-    if (event && event.error !== 'no-speech') reject(event);
     clearTimeout(t);
     ended = true;
     sr.stop();
+    if (event) {
+      if (event.type === 'nomatch' || event.error === 'no-speech')
+        resolve('');
+      else
+        reject(event.type === 'end' ? {error: 'unable to understand'} : event);
+    }
   };
   const result = ({results}) => {
     stop();
@@ -30,6 +35,7 @@ export default (options = void 0) => new Promise((resolve, reject) => {
   const sr = assign(new SpeechRecognition, options, interimResults);
   sr.addEventListener('error', stop, once);
   sr.addEventListener('nomatch', stop, once);
+  sr.addEventListener('end', stop, once);
   sr.addEventListener('audioend', () => stop(), once);
   sr.addEventListener('result', event => {
     if (ended)
