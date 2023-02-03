@@ -11,6 +11,7 @@ const {
   speechSynthesis
 } = globalThis;
 
+let chosenVoice;
 let bearer = session.get('bearer') || local.get('bearer');
 let voice = local.get('voice');
 let language = local.get('language');
@@ -101,6 +102,7 @@ async function prepareListening(gpt) {
     $('#mic').focus();
     it.show(`⚠️ ${error || message || 'something is wrong'}`);
   };
+  chosenVoice = voices.find(byNameAndLang);
   settings(gpt, voices);
   it.show('🎙️ click the mic to ask anything');
   $('#content').replaceChildren().style.opacity = 1;
@@ -108,54 +110,74 @@ async function prepareListening(gpt) {
     .on('click', ({currentTarget: button}) => {
       button.disabled = true;
       it.show('🧑 ...');
-      const useVoice = voices.find(byNameAndLang);
-      say('', useVoice);
-      listen(useVoice ? {lang: language} : void 0).then(
-        transcript => {
-          if (transcript) {
-            it.show(`🧑 “${transcript}”`);
-            gpt.complete(transcript).then(
-              result => {
-                button.disabled = false;
-                button.focus();
-                if (result.error)
-                  error(result.error);
-                else {
-                  showUsage(result);
-                  for (const choice of result.choices) {
-                    const images = [];
-                    const text = choice.text.trim()
-                      .replace(/^[?!]\s*/, '')
-                      .replace(
-                        /!\[(.+?)\]\((.+?)\)/,
-                        (_, alt, src) => {
-                          return `[${images.push({alt, src})}]`;
-                        }
-                      );
-                    say(text, voices.find(byNameAndLang));
-                    it.show('🤖 ' + text);
-                    if (images.length) {
-                      $('#content').append(document.createElement('hr'));
-                      for (const details of images) {
-                        const image = Object.assign(new Image, details);
-                        $('#content').append(image);
+      say('', chosenVoice);
+      listen(chosenVoice ? {lang: language} : void 0).then(complete, fallback);
+      function complete(transcript) {
+        if (transcript) {
+          it.show(`🧑 “${transcript}”`);
+          gpt.complete(transcript).then(
+            result => {
+              button.disabled = false;
+              button.focus();
+              if (result.error)
+                error(result.error);
+              else {
+                showUsage(result);
+                for (const choice of result.choices) {
+                  const images = [];
+                  const text = choice.text.trim()
+                    .replace(/^[?!]\s*/, '')
+                    .replace(
+                      /!\[(.+?)\]\((.+?)\)/,
+                      (_, alt, src) => {
+                        return `[${images.push({alt, src})}]`;
                       }
+                    );
+                  say(text, chosenVoice);
+                  it.show('🤖 ' + text);
+                  if (images.length) {
+                    $('#content').append(document.createElement('hr'));
+                    for (const details of images) {
+                      const image = Object.assign(new Image, details);
+                      $('#content').append(image);
                     }
-                    break;
                   }
+                  break;
                 }
-              },
-              error
-            );
-          }
-          else {
-            button.disabled = false;
-            button.focus();
-            it.show('🤷');
-          }
-        },
-        error
-      );
+              }
+            },
+            error
+          );
+        }
+        else {
+          button.disabled = false;
+          button.focus();
+          it.show('🤷');
+        }
+      }
+
+      function fallback({error, message}) {
+        if ('service-not-allowed' !== (error || message) || !$$('#mic').length)
+          error({error, message});
+        else {
+          const div = document.createElement('div');
+          const textarea = div.appendChild(document.createElement('textarea'));
+          textarea.placeholder = 'Microphone placeholder.\nClick the robot to ask.';
+          button = div.appendChild(document.createElement('button'));
+          div.id = 'fallback';
+          $('#mic').replaceWith(div);
+          $(button)
+            .on('click', () => {
+              const value = textarea.value.trim();
+              if (value) {
+                button.disabled = true;
+                textarea.value = '';
+                complete(value);
+              }
+            })
+            .textContent = '🤖';
+        }
+      }
     })
     .disabled = false;
 }
@@ -185,10 +207,12 @@ async function settings(gpt, voices) {
       if (name === 'default') {
         voice = null;
         language = null;
+        chosenVoice = null;
       }
       else {
         voice = name;
         language = lang;
+        chosenVoice = voices.find(byNameAndLang);
       }
       local.set('voice', voice);
       local.set('language', language);
